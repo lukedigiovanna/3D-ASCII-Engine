@@ -133,7 +133,7 @@ int main() {
 	Matrix4 perspective;
 	perspective.perspective(90.0f, (float)screen.getWidth() / screen.getHeight(), 0.1f, 100.0f);
 	float yaw = 0, pitch = 0;
-	Vec4 camPos = Vec4(0, 0, 0), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
+	Vec4 camPos = Vec4(0, 0, 5), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
 	while (true) {
 		
 		// calculate vectors using the camera angles
@@ -146,10 +146,10 @@ int main() {
 
 		// handle camera movement
 		if (GetKeyState('A') & 0x8000) {
-			camPos.x -= 0.05f;
+			camPos.x -= 0.15f;
 		}
 		if (GetKeyState('D') & 0x8000) {
-			camPos.x += 0.05f;
+			camPos.x += 0.15f;
 		}
 		if (GetKeyState('W') & 0x8000) {
 			camPos.z -= 0.25f;
@@ -177,8 +177,8 @@ int main() {
 		Matrix4 view;
 		Vec4 camRight = camForward.cross(camUp);
 		camRight.normalize();
-		view.view(camRight, camUp, camForward, camPos);
-		//view.lookAt(camPos, camPos + camForward, camUp);
+		//view.view(camRight, camUp, camForward, camPos);
+		view.lookAt(camPos, camPos + camForward, camUp);
 		//view.lookAt(Vec4(0, 0, 10), Vec4(0, 0, 0), Vec4(0, 1, 0));
 		// SET UP TRANSFORMATION
 		Matrix4 translation;

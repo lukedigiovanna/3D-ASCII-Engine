@@ -124,9 +124,9 @@ void Matrix4::lookAt(const Vec4& eye, const Vec4& center, const Vec4& up)
 	this->set(1, 2, z.y);
 	this->set(2, 2, z.z);
 	this->set(3, 2, -z.dot(eye));
-	this->set(0, 3, 0);
-	this->set(1, 3, 0);
-	this->set(2, 3, 0);
+	this->set(0, 3, eye.x);
+	this->set(1, 3, eye.y);
+	this->set(2, 3, eye.z);
 	this->set(3, 3, 1);
 }
 
