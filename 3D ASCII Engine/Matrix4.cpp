@@ -74,15 +74,28 @@ void Matrix4::perspective(float angle, float aspect, float near, float far)
 	float scale = 1 / std::tanf(angle * 0.5f * 3.1415965f / 180);
 	this->set(0, 0, scale / aspect);
 	this->set(1, 1, scale);
-	this->set(2, 2, -far / (far - near));
-	this->set(3, 2, -(2 * far * near) / (far - near));
-	this->set(2, 3, -1);
+	this->set(2, 2, -(far + near) / (far - near));
+	this->set(2, 3, -(2 * far * near) / (far - near));
+	this->set(3, 2, -1);
 	this->set(3, 3, 0);
 }
 
 void Matrix4::view(const Vec4& right, const Vec4& up, const Vec4& forward, const Vec4& position)
 {
 	this->set(0, 0, right.x);
+	this->set(0, 1, right.y);
+	this->set(0, 2, right.z);
+	this->set(0, 3, -right.dot(position));
+	this->set(1, 0, up.x);
+	this->set(1, 1, up.y);
+	this->set(1, 2, up.z);
+	this->set(1, 3, -up.dot(position));
+	this->set(2, 0, forward.x);
+	this->set(2, 1, forward.y);
+	this->set(2, 2, forward.z);
+	this->set(2, 3, -forward.dot(position));
+	this->set(3, 3, 1);
+	/*this->set(0, 0, right.x);
 	this->set(1, 0, right.y);
 	this->set(2, 0, right.z);
 	this->set(3, 0, -right.dot(position));
@@ -100,7 +113,7 @@ void Matrix4::view(const Vec4& right, const Vec4& up, const Vec4& forward, const
 	this->set(0, 3, position.x);
 	this->set(1, 3, position.y);
 	this->set(2, 3, position.z);
-	this->set(3, 3, 1);
+	this->set(3, 3, 1);*/
 }
 
 void Matrix4::lookAt(const Vec4& eye, const Vec4& center, const Vec4& up)

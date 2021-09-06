@@ -133,7 +133,10 @@ int main() {
 	Matrix4 perspective;
 	perspective.perspective(90.0f, (float)screen.getWidth() / screen.getHeight(), 0.1f, 100.0f);
 	float yaw = 0, pitch = 0;
-	Vec4 camPos = Vec4(0, 0, 5), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
+	Vec4 camPos = Vec4(2, 0, 0), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
+	Vec4 right = camForward.cross(camUp);
+	printf("%f %f %f", right.x, right.y, right.z);
+	//exit(0);
 	while (true) {
 		
 		// calculate vectors using the camera angles
@@ -144,24 +147,27 @@ int main() {
 		camForward.z = std::sinf(yawR) * std::cosf(pitchR);
 		camForward.normalize();
 
+		float forwardMovement = 0.0f;
+		float rightMovement = 0.0f;
+		float speed = 0.15f;
 		// handle camera movement
 		if (GetKeyState('A') & 0x8000) {
-			camPos.x -= 0.15f;
+			rightMovement -= speed;
 		}
 		if (GetKeyState('D') & 0x8000) {
-			camPos.x += 0.15f;
+			rightMovement += speed;
 		}
 		if (GetKeyState('W') & 0x8000) {
-			camPos.z -= 0.25f;
+			forwardMovement -= speed;
 		}
 		if (GetKeyState('S') & 0x8000) {
-			camPos.z += 0.25f;
+			forwardMovement += speed;
 		}
 		if (GetKeyState(VK_RIGHT) & 0x8000) {
-			yaw += 4;
+			yaw -= 4;
 		}
 		if (GetKeyState(VK_LEFT) & 0x8000) {
-			yaw -= 4;
+			yaw += 4;
 		}
 
 		if (GetKeyState(VK_DOWN) & 0x8000) {
@@ -177,8 +183,16 @@ int main() {
 		Matrix4 view;
 		Vec4 camRight = camForward.cross(camUp);
 		camRight.normalize();
-		//view.view(camRight, camUp, camForward, camPos);
-		view.lookAt(camPos, camPos + camForward, camUp);
+
+		// apply movement
+		Vec4 forwardMovementVector = camForward * forwardMovement;
+		Vec4 rightMovementVector = camRight * rightMovement;
+		camPos += forwardMovementVector;
+		camPos += rightMovementVector;
+
+		view.view(camRight, camUp, camForward, camPos);
+		//view.view(Vec4(1,0,0), Vec4(0,1,0), Vec4(0,0,-1), camPos);
+		//view.lookAt(camPos, camPos + camForward, camUp);
 		//view.lookAt(Vec4(0, 0, 10), Vec4(0, 0, 0), Vec4(0, 1, 0));
 		// SET UP TRANSFORMATION
 		Matrix4 translation;
@@ -202,6 +216,7 @@ int main() {
 		for (int i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
 			depthBuffer[i] = -9999999.0f;
 
+		float lastZ = 0;
 		for (int i = 0; i < numTriangles; i++) {
 			SHORT points[6]; // find screen coordinates of the points
 			float depth[3];
@@ -210,12 +225,17 @@ int main() {
 				point.multiply(transformation); // apply transformation to get into world space
 				point.multiply(view); // apply the camera matrix
 				point.multiply(perspective); // finally apply the perspective projection
+				// normalize the homogenous coordinate
+				point.x /= point.w;
+				point.y /= point.w;
+				point.z /= point.w;
 				// convert point to viewport space
 				point.x = (point.x - (viewportX - viewportWidth / 2)) / viewportWidth;
 				point.y = (point.y - (viewportY - viewportHeight / 2)) / viewportHeight;
 				points[j * 2] = (SHORT)(point.x * screen.getWidth()); 
 				points[j * 2 + 1] = (SHORT)(screen.getHeight() - point.y * screen.getHeight());
-				depth[j] = point.z;
+				depth[j] = -point.z;
+				lastZ = point.z;
 			}
 			
 			// iterate between each adjacent point
@@ -262,7 +282,7 @@ int main() {
 					xzPair pair = xzVals.at(0);
 					// check the z value against the depth buffer
 					int idx = pair.x + y * screen.getWidth();
-					if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && pair.z > depthBuffer[idx]) {
+					if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && std::abs(pair.z) <= 1 && pair.z > depthBuffer[idx]) {
 						screen.setPixel(pair.x, y, lexicon[i / 2 % size]);
 						depthBuffer[idx] = pair.z;
 					}
@@ -281,7 +301,7 @@ int main() {
 						for (SHORT x = x0.x; x <= x1.x; x++) {
 							// check against the depth buffer
 							int idx = x + y * screen.getWidth();
-							if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && z >= depthBuffer[idx]) {
+							if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && std::abs(z) <= 1 && z >= depthBuffer[idx]) {
 								depthBuffer[idx] = z;
 								screen.setPixel(x, y, lexicon[i / 2 % size]);
 							}
@@ -304,11 +324,13 @@ int main() {
 		std::wstring camXS = L"X: " + std::to_wstring(camPos.x);
 		std::wstring camYS = L"Y: " + std::to_wstring(camPos.y);
 		std::wstring camZS = L"Z: " + std::to_wstring(camPos.z);
+		std::wstring lastZS = L"LZ: " + std::to_wstring(lastZ);
 		screen.drawString(1, 1, yawS.c_str());
 		screen.drawString(1, 2, pitchS.c_str());
 		screen.drawString(1, 3, camXS.c_str());
 		screen.drawString(1, 4, camYS.c_str());
 		screen.drawString(1, 5, camZS.c_str());
+		screen.drawString(1, 6, lastZS.c_str());
 		
 		counter++;
 		screen.updateResolution();

@@ -7,10 +7,10 @@ private:
 	float applyDot(const Matrix4& mat, int row);
 
 public:
-	float x, y, z;
+	float x, y, z, w;
 
-	Vec4() : x(0), y(0), z(0) {}
-	Vec4(float x, float y, float z) : x(x), y(y), z(z) {}
+	Vec4() : x(0), y(0), z(0), w(1) {}
+	Vec4(float x, float y, float z) : x(x), y(y), z(z), w(1) {}
 
 	void multiply(const Matrix4& transformation);
 

@@ -12,9 +12,10 @@ void Vec4::multiply(const Matrix4& transformation)
 		ny = this->applyDot(transformation, 1),
 		nz = this->applyDot(transformation, 2),
 		w = this->applyDot(transformation, 3);
-	this->x = nx / w;
-	this->y = ny / w;
-	this->z = nz / w;
+	this->x = nx;
+	this->y = ny;
+	this->z = nz;
+	this->w = w;
 }
 
 Vec4& Vec4::operator+(const Vec4& rh) const
