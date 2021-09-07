@@ -64,76 +64,37 @@ int main() {
 			projection matrix
 
 	*/
-
-	// use triangle format .. 
-	// each set of three points will be treated as a triangle
-	float model[] = { // list all 6 faces of a cube
-		-1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-
-		1.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-
-		1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,
-
-
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-
-		1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 
-
-		-1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-
-		-1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
+	//float model[24] = {
+	//	-1.0f, -1.0f, -1.0f, // 0
+	//	-1.0f, -1.0f, 1.0f,  // 1
+	//	1.0f, -1.0f, -1.0f,  // 2
+	//	1.0f, -1.0f, 1.0f,   // 3
+	//	-1.0f, 1.0f, -1.0f,  // 4
+	//	-1.0f, 1.0f, 1.0f,   // 5
+	//	1.0f, 1.0f, -1.0f,   // 6
+	//	1.0f, 1.0f, 1.0f,    // 7
+	//};
+	//unsigned int indices[36] = {
+	//	0, 1, 2, 2, 1, 3,
+	//	0, 2, 6, 0, 4, 6,
+	//	0, 1, 5, 0, 4, 5,
+	//	1, 3, 7, 1, 7, 5,
+	//	4, 5, 7, 4, 6, 7,
+	//	2, 3, 7, 2, 7, 6
+	//};
+	float model[12] = {
+		1.0f, 0.0f, 0.0f,
+		std::cosf(2 * 3.14159265f / 3), 0.0f, std::sinf(2 * 3.14159265f / 3),
+		std::cosf(4 * 3.14159265f / 3), 0.0f, std::sinf(4 * 3.14159265f / 3),
+		0.0f, 1.0f, 0.0f
 	};
-	/*float model[24] = {
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f,
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-	};*/
-	unsigned int indices[6] = {
+	unsigned int indices[12] = {
 		0, 1, 2,
-		2, 1, 3
+		0, 1, 3,
+		0, 2, 3,
+		1, 2, 3
 	};
-	const int numTriangles = 12;
-
-	// construct a transformation matrix to test dis out.
+	const int numTriangles = 4;
 
 	const float viewportWidth = 2.0f, viewportHeight = 2.0f;
 	const float viewportX = 0.0f, viewportY = 0.0f;
@@ -143,15 +104,12 @@ int main() {
 	screen.forceClear();
 
 	float angle = 0.0f;
-	float* depthBuffer = new float[MAX_WIDTH * MAX_HEIGHT];
+	float* depthBuffer = new float[MAX_WIDTH * MAX_HEIGHT]; // allocate to heap to conserve stack memory
 	Matrix4 perspective;
 	perspective.perspective(90.0f, (float)screen.getWidth() / screen.getHeight(), 0.1f, 100.0f);
 	float yaw = 0, pitch = 0;
 	float rotateSpeed = 10;
 	Vec4 camPos = Vec4(2, 0, 0), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
-	Vec4 right = camForward.cross(camUp);
-	printf("%f %f %f", right.x, right.y, right.z);
-	//exit(0);
 	while (true) {
 		
 		// calculate vectors using the camera angles
@@ -206,7 +164,6 @@ int main() {
 		camPos += rightMovementVector;
 
 		view.view(camRight, camUp, camForward, camPos);
-		//view.lookAt(camPos, camPos + camForward, camUp);
 		// SET UP TRANSFORMATION
 		Matrix4 translation;
 		translation.setIdentity();
@@ -217,7 +174,7 @@ int main() {
 		
 		Matrix4 rotate;
 		rotate.setIdentity();
-		rotate.rotate(angle, 1,  1, 1);
+		rotate.rotate(angle, 0,  1, 0);
 		angle += 0.05f;
 
 		Matrix4 transformation = translation.multiply(scale);
@@ -234,7 +191,8 @@ int main() {
 			SHORT points[6]; // find screen coordinates of the points
 			float depth[3];
 			for (int j = 0; j < 3; j++) {
-				Vec4 point = Vec4(model[i * 9 + j * 3], model[i * 9 + j * 3 + 1], model[i * 9 + j * 3 + 2]);
+				unsigned int index = indices[i * 3 + j] * 3;
+				Vec4 point = Vec4(model[index], model[index + 1], model[index + 2]);
 				point.multiply(transformation); // apply transformation to get into world space
 				point.multiply(view); // apply the camera matrix
 				point.multiply(perspective); // finally apply the perspective projection
@@ -288,6 +246,7 @@ int main() {
 				}
 			}
 			// go through each y value in the map
+			TCHAR fill = lexicon[i % size];
 			for (std::map<SHORT, std::vector<xzPair>>::iterator iter = rasterMap.begin(); iter != rasterMap.end(); ++iter) {
 				SHORT y = iter->first;
 				std::vector<xzPair> xzVals = iter->second;
@@ -296,7 +255,7 @@ int main() {
 					// check the z value against the depth buffer
 					int idx = pair.x + y * screen.getWidth();
 					if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && std::abs(pair.z) <= 1 && pair.z > depthBuffer[idx]) {
-						screen.setPixel(pair.x, y, lexicon[i / 2 % size]);
+						screen.setPixel(pair.x, y, fill);
 						depthBuffer[idx] = pair.z;
 					}
 				}
@@ -316,14 +275,14 @@ int main() {
 							int idx = x + y * screen.getWidth();
 							if (idx >= 0 && idx < MAX_WIDTH * MAX_HEIGHT && std::abs(z) <= 1 && z >= depthBuffer[idx]) {
 								depthBuffer[idx] = z;
-								screen.setPixel(x, y, lexicon[i / 2 % size]);
+								screen.setPixel(x, y, fill);
 							}
 							z += dz;
 						}
 					}
 					else if (drawStyle == DRAW_MESH) {
 						for (std::vector<xzPair>::iterator iter = xzVals.begin(); iter != xzVals.end(); ++iter) {
-							screen.setPixel((*iter).x, y, lexicon[i / 2 % size]);
+							screen.setPixel((*iter).x, y, fill);
 						}
 					}
 				}
