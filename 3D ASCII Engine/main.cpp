@@ -117,6 +117,20 @@ int main() {
 		-1.0f, 1.0f, -1.0f,
 		-1.0f, 1.0f, 1.0f,
 	};
+	/*float model[24] = {
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f, 1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, 1.0f,
+		-1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f, 1.0f,
+	};*/
+	unsigned int indices[6] = {
+		0, 1, 2,
+		2, 1, 3
+	};
 	const int numTriangles = 12;
 
 	// construct a transformation matrix to test dis out.
@@ -133,6 +147,7 @@ int main() {
 	Matrix4 perspective;
 	perspective.perspective(90.0f, (float)screen.getWidth() / screen.getHeight(), 0.1f, 100.0f);
 	float yaw = 0, pitch = 0;
+	float rotateSpeed = 10;
 	Vec4 camPos = Vec4(2, 0, 0), camUp = Vec4(0, 1, 0), camForward = Vec4(0, 0, -1);
 	Vec4 right = camForward.cross(camUp);
 	printf("%f %f %f", right.x, right.y, right.z);
@@ -164,17 +179,17 @@ int main() {
 			forwardMovement += speed;
 		}
 		if (GetKeyState(VK_RIGHT) & 0x8000) {
-			yaw -= 4;
+			yaw -= rotateSpeed;
 		}
 		if (GetKeyState(VK_LEFT) & 0x8000) {
-			yaw += 4;
+			yaw += rotateSpeed;
 		}
 
 		if (GetKeyState(VK_DOWN) & 0x8000) {
-			pitch += 4;
+			pitch += rotateSpeed;
 		}
 		if (GetKeyState(VK_UP) & 0x8000) {
-			pitch -= 4;
+			pitch -= rotateSpeed;
 		}
 
 		if (pitch > 89) pitch = 89;
@@ -191,9 +206,7 @@ int main() {
 		camPos += rightMovementVector;
 
 		view.view(camRight, camUp, camForward, camPos);
-		//view.view(Vec4(1,0,0), Vec4(0,1,0), Vec4(0,0,-1), camPos);
 		//view.lookAt(camPos, camPos + camForward, camUp);
-		//view.lookAt(Vec4(0, 0, 10), Vec4(0, 0, 0), Vec4(0, 1, 0));
 		// SET UP TRANSFORMATION
 		Matrix4 translation;
 		translation.setIdentity();

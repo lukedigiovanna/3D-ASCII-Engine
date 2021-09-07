@@ -95,25 +95,6 @@ void Matrix4::view(const Vec4& right, const Vec4& up, const Vec4& forward, const
 	this->set(2, 2, forward.z);
 	this->set(2, 3, -forward.dot(position));
 	this->set(3, 3, 1);
-	/*this->set(0, 0, right.x);
-	this->set(1, 0, right.y);
-	this->set(2, 0, right.z);
-	this->set(3, 0, -right.dot(position));
-
-	this->set(0, 1, up.x);
-	this->set(1, 1, up.y);
-	this->set(2, 1, up.z);
-	this->set(3, 1, -up.dot(position));
-
-	this->set(0, 2, forward.x);
-	this->set(1, 2, forward.y);
-	this->set(2, 2, forward.z);
-	this->set(3, 2, -forward.dot(position));
-
-	this->set(0, 3, position.x);
-	this->set(1, 3, position.y);
-	this->set(2, 3, position.z);
-	this->set(3, 3, 1);*/
 }
 
 void Matrix4::lookAt(const Vec4& eye, const Vec4& center, const Vec4& up)
@@ -126,20 +107,20 @@ void Matrix4::lookAt(const Vec4& eye, const Vec4& center, const Vec4& up)
 	x.normalize();
 	y.normalize();
 	this->set(0, 0, x.x);
-	this->set(1, 0, x.y);
-	this->set(2, 0, x.z);
-	this->set(3, 0, -x.dot(eye));
-	this->set(0, 1, y.x);
+	this->set(0, 1, x.y);
+	this->set(0, 2, x.z);
+	this->set(0, 3, -x.dot(eye));
+	this->set(1, 0, y.x);
 	this->set(1, 1, y.y);
-	this->set(2, 1, y.z);
-	this->set(3, 1, -y.dot(eye));
-	this->set(0, 2, z.x);
-	this->set(1, 2, z.y);
+	this->set(1, 2, y.z);
+	this->set(1, 3, -y.dot(eye));
+	this->set(2, 0, z.x);
+	this->set(2, 1, z.y);
 	this->set(2, 2, z.z);
-	this->set(3, 2, -z.dot(eye));
-	this->set(0, 3, eye.x);
-	this->set(1, 3, eye.y);
-	this->set(2, 3, eye.z);
+	this->set(2, 3, -z.dot(eye));
+	/*this->set(3, 0, -eye.x);
+	this->set(3, 1, -eye.y);
+	this->set(3, 2, -eye.z);*/
 	this->set(3, 3, 1);
 }
 
