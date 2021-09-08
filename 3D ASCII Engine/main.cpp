@@ -150,6 +150,11 @@ int main() {
 			pitch -= rotateSpeed;
 		}
 
+		if (GetKeyState(VK_SPACE) & 0x8000)
+			camPos.y += speed;
+		if (GetKeyState(VK_LSHIFT) & 0x8000)
+			camPos.y -= speed;
+
 		if (pitch > 89) pitch = 89;
 		if (pitch < -89) pitch = -89;
 
@@ -160,6 +165,8 @@ int main() {
 		// apply movement
 		Vec4 forwardMovementVector = camForward * forwardMovement;
 		Vec4 rightMovementVector = camRight * rightMovement;
+		forwardMovementVector.y = 0;
+		rightMovementVector.y = 0;
 		camPos += forwardMovementVector;
 		camPos += rightMovementVector;
 
@@ -245,6 +252,7 @@ int main() {
 					z += dz;
 				}
 			}
+			if (rasterMap.size() > MAX_HEIGHT) continue;
 			// go through each y value in the map
 			TCHAR fill = lexicon[i % size];
 			for (std::map<SHORT, std::vector<xzPair>>::iterator iter = rasterMap.begin(); iter != rasterMap.end(); ++iter) {
@@ -268,6 +276,7 @@ int main() {
 							x0 = x1;
 							x1 = t;
 						}
+						if (x1.x - x0.x > MAX_WIDTH) continue;
 						float z = x0.z;
 						float dz = (x1.z - x0.z) / (x1.x - x0.x);
 						for (SHORT x = x0.x; x <= x1.x; x++) {
