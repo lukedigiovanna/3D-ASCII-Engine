@@ -4,6 +4,11 @@
 #define MAX_WIDTH 150
 #define MAX_HEIGHT 100
 
+typedef struct {
+	SHORT x;
+	float z;
+} xzPair;
+
 class Screen
 {
 private:
@@ -29,7 +34,7 @@ public:
 
 	void updateResolution();
 	void setPixel(SHORT x, SHORT y, TCHAR val); //sets the pixel in the draw buffer.. to render the screen you need to make a call to 'render'
-	void rasterize(const SHORT points[6], const float depth[3]);
+	void rasterize(const SHORT points[6], const float depth[3], const TCHAR fill);
 	void drawString(SHORT x, SHORT y, LPCWSTR string);
 	void clear(TCHAR val);
 	void forceClear();
