@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <Windows.h>
 #include "Screen.h"
 #include <thread>
@@ -64,25 +64,25 @@ int main() {
 			projection matrix
 
 	*/
-	//float model[24] = {
-	//	-1.0f, -1.0f, -1.0f, // 0
-	//	-1.0f, -1.0f, 1.0f,  // 1
-	//	1.0f, -1.0f, -1.0f,  // 2
-	//	1.0f, -1.0f, 1.0f,   // 3
-	//	-1.0f, 1.0f, -1.0f,  // 4
-	//	-1.0f, 1.0f, 1.0f,   // 5
-	//	1.0f, 1.0f, -1.0f,   // 6
-	//	1.0f, 1.0f, 1.0f,    // 7
-	//};
-	//unsigned int indices[36] = {
-	//	0, 1, 2, 2, 1, 3,
-	//	0, 2, 6, 0, 4, 6,
-	//	0, 1, 5, 0, 4, 5,
-	//	1, 3, 7, 1, 7, 5,
-	//	4, 5, 7, 4, 6, 7,
-	//	2, 3, 7, 2, 7, 6
-	//};
-	float model[12] = {
+	float model[24] = {
+		-1.0f, -1.0f, -1.0f, // 0
+		-1.0f, -1.0f, 1.0f,  // 1
+		1.0f, -1.0f, -1.0f,  // 2
+		1.0f, -1.0f, 1.0f,   // 3
+		-1.0f, 1.0f, -1.0f,  // 4
+		-1.0f, 1.0f, 1.0f,   // 5
+		1.0f, 1.0f, -1.0f,   // 6
+		1.0f, 1.0f, 1.0f,    // 7
+	};
+	unsigned int indices[36] = {
+		0, 1, 2, 2, 1, 3,
+		0, 2, 6, 0, 4, 6,
+		0, 1, 5, 0, 4, 5,
+		1, 3, 7, 1, 7, 5,
+		4, 5, 7, 4, 6, 7,
+		2, 3, 7, 2, 7, 6
+	};
+	/*float model[12] = {
 		1.0f, 0.0f, 0.0f,
 		std::cosf(2 * 3.14159265f / 3), 0.0f, std::sinf(2 * 3.14159265f / 3),
 		std::cosf(4 * 3.14159265f / 3), 0.0f, std::sinf(4 * 3.14159265f / 3),
@@ -93,8 +93,8 @@ int main() {
 		0, 1, 3,
 		0, 2, 3,
 		1, 2, 3
-	};
-	const int numTriangles = 4;
+	};*/
+	const int numTriangles = 12;
 
 	const float viewportWidth = 2.0f, viewportHeight = 2.0f;
 	const float viewportX = 0.0f, viewportY = 0.0f;
@@ -113,8 +113,8 @@ int main() {
 	while (true) {
 		
 		// calculate vectors using the camera angles
-		float yawR = yaw * 3.14159265 / 180;
-		float pitchR = pitch * 3.14159265 / 180;
+		float yawR = yaw * 3.14159265f / 180;
+		float pitchR = pitch * 3.14159265f / 180;
 		camForward.x = std::cosf(yawR) * std::cosf(pitchR);
 		camForward.y = std::sinf(pitchR);
 		camForward.z = std::sinf(yawR) * std::cosf(pitchR);

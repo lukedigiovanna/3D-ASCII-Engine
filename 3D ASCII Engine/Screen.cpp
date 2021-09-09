@@ -20,6 +20,11 @@ void Screen::setPixel(SHORT x, SHORT y, TCHAR val)
 		this->drawBuffer[y * width + x] = val;
 }
 
+void Screen::rasterize(const SHORT points[6], const float depth[3])
+{
+
+}
+
 void Screen::drawString(SHORT x, SHORT y, LPCWSTR string)
 {
 	WriteConsoleOutputCharacter(this->handle, string, wcslen(string), { x * 2, y }, &dw);
