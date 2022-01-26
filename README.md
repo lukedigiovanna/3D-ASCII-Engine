@@ -6,7 +6,7 @@ C++ Application which can render 3D scenes using nothing but the standard librar
 ### Rasterization mode
 The standard way we view the 3D world. 
 
-![rasterization]url(https://i.ibb.co/Jkt1CjW/snip.png)
+![rasterization](https://i.ibb.co/Jkt1CjW/snip.png)
 
 ### Mesh frame mode
 
