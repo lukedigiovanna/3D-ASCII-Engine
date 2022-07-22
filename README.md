@@ -1,6 +1,8 @@
 # 3D ASCII Engine
 C++ Application which can render 3D scenes using nothing but the standard library and output terminal.
 
+*This only works on Windows!*
+
 ## Getting a screen to draw to
 
 This is done entirely using the standard output, which can actually be quite powerful when using C++. We can get a pointer to the console output using the Windows API and then easily call a function to draw characters at particular coordinates. There is also capabilities to check the size of the output to handle dynamic resizing of the render buffer. Extensions to this project can include adding color
